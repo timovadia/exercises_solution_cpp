@@ -1,14 +1,17 @@
-﻿//Напишите функцию, которая
+//Напишите функцию, которая
 //называется PalindromFilter,
 //возвращает vector<string>,
 //принимает vector<string> words и int min_length,
 //возвращает из вектора words все строки - палиндромы длиной не меньше min_length.
 //
 //Примеры
-//WORDS	               MINLENGTH	       РЕЗУЛЬТАТ
-//abacaba, aba	           5	            abacaba
-//abacaba, aba	           2				abacaba, aba
-//weew, bro, code	       4				weew
+//WORDS/min_length  РЕЗУЛЬТАТ
+//abacaba, aba	           
+//5                 abacaba
+//abacaba, aba	           
+//2                 abacaba, aba
+//weew, bro, code	       
+//4                 weew
 
 #include <iostream>
 #include <string>
