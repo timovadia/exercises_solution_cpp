@@ -123,6 +123,7 @@ vector<pair<int, int>> FindAllDocuments(const map<string, set<int>>& word_to_doc
         }
         rez_id.push_back({ count_relevance, id_doc });
     }
+
     sort(begin(rez_id), end(rez_id));
     reverse(begin(rez_id), end(rez_id));
     return rez_id;
