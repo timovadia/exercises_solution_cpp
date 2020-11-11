@@ -41,79 +41,80 @@ bool HasDocumentGreaterRelevance(const Document& lhs, const Document& rhs) {
 }
 
 class SearchServer {
-	public:
-		void SetStopWords(const string& text) {
-			for (const string& word : SplitIntoWords(text)) {
-				stop_words_.insert(word);
+public:
+	void SetStopWords(const string& text) {
+		for (const string& word : SplitIntoWords(text)) {
+			stop_words_.insert(word);
+		}
+	}
+
+	void AddDocument(int document_id, const string& document) {
+		for (const string& word : SplitIntoWordsNoStop(document)) {
+			word_to_documents_[word].insert(document_id);
+		}
+	}
+
+	vector<Document> FindTopDocuments(const string& query) const {
+		auto matched_documents = FindAllDocuments(query);
+
+		sort(matched_documents.begin(), matched_documents.end(), HasDocumentGreaterRelevance);
+		if (matched_documents.size() > MAX_RESULT_DOCUMENT_COUNT) {
+			matched_documents.resize(MAX_RESULT_DOCUMENT_COUNT);
+		}
+		return matched_documents;
+	}
+
+private:
+	map<string, set<int>> word_to_documents_;
+	set<string> stop_words_;
+
+	vector<string> SplitIntoWords(const string& text) const {
+		vector<string> words;
+		string word;
+		for (const char c : text) {
+			if (c == ' ') {
+				words.push_back(word);
+				word = "";
+			}
+			else {
+				word += c;
+			}
+		}
+		words.push_back(word);
+
+		return words;
+	}
+
+	vector<string> SplitIntoWordsNoStop(const string& text) const {
+		vector<string> words;
+		for (const string& word : SplitIntoWords(text)) {
+			if (stop_words_.count(word) == 0) {
+				words.push_back(word);
+			}
+		}
+		return words;
+	}
+
+	vector<Document> FindAllDocuments(const string& query) const {
+
+		const vector<string> query_words = SplitIntoWordsNoStop(query);
+		map<int, int> document_to_relevance;
+		for (const string& word : query_words) {
+			if (word_to_documents_.count(word) == 0) {
+				continue;
+			}
+			for (const int document_id : word_to_documents_.at(word)) {
+				++document_to_relevance[document_id];
 			}
 		}
 
-		void AddDocument(int document_id, const string& document) {
-			for (const string& word : SplitIntoWordsNoStop(document, stop_words_)) {
-				word_to_documents_[word].insert(document_id);
-			}
+		vector<Document> matched_documents;
+		for (auto doc : document_to_relevance) {
+			matched_documents.push_back({ doc.first, doc.second });
 		}
 
-		vector<Document> FindTopDocuments(const string& query) {
-			auto matched_documents = FindAllDocuments(query);
-
-			sort(matched_documents.begin(), matched_documents.end(), HasDocumentGreaterRelevance);
-			if (matched_documents.size() > MAX_RESULT_DOCUMENT_COUNT) {
-				matched_documents.resize(MAX_RESULT_DOCUMENT_COUNT);
-			}
-			return matched_documents;
-		}
-
-	private:
-		map<string, set<int>> word_to_documents_;
-		set<string> stop_words_;
-
-		vector<string> SplitIntoWords(const string& text) {
-			vector<string> words;
-			string word;
-			for (const char c : text) {
-				if (c == ' ') {
-					words.push_back(word);
-					word = "";
-				}
-				else {
-					word += c;
-				}
-			}
-			words.push_back(word);
-			return words;
-		}
-
-		vector<string> SplitIntoWordsNoStop(const string& text, const set<string>& stop_words) {
-			vector<string> words;
-			for (const string& word : SplitIntoWords(text)) {
-				if (stop_words.count(word) == 0) {
-					words.push_back(word);
-				}
-			}
-			return words;
-		}
-
-		vector<Document> FindAllDocuments(const string& query) {
-			const vector<string> query_words = SplitIntoWordsNoStop(query, stop_words_);
-			map<int, int> document_to_relevance;
-			
-			for (const string& word : query_words) {
-				if (word_to_documents_.count(word) == 0) {
-					continue;
-				}
-				for (const int document_id : word_to_documents_.at(word)) {
-					++document_to_relevance[document_id];
-				}
-			}
-
-			vector<Document> matched_documents;
-			for (auto doc : document_to_relevance) {
-				matched_documents.push_back({ doc.first, doc.second });
-			}
-
-			return matched_documents;
-		}
+		return matched_documents;
+	}
 };
 
 string ReadLine() {
@@ -142,7 +143,7 @@ SearchServer CreateSearchServer() {
 }
 
 int main() {
-	SearchServer server = CreateSearchServer();
+	const SearchServer server = CreateSearchServer();
 
 	const string query = ReadLine();
 	vector<Document> v_top_relevance_docs = server.FindTopDocuments(query);
