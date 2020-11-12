@@ -38,7 +38,14 @@ int CountAndAddNewDogs(const vector<string>& new_dogs,
     //через лямбду
     int count = count_if(new_dogs.begin(), new_dogs.end(),
         [&shelter, &max_amount](const string& dog) {
-            return shelter[dog] < max_amount.at(dog) ? shelter[dog] = shelter[dog] + 1 : 0;
+            //return shelter[dog] < max_amount.at(dog) ? shelter[dog] += 1 : 0;
+
+            //или лучше так
+            int& current_amount = shelter[dog];
+            if (current_amount < max_amount.at(dog)) {
+                return ++current_amount;
+            }
+            else return 0;
         });
     return count;
 }
