@@ -11,7 +11,7 @@
 
 using namespace std;
 
-int strst(const char* text, const char* pattern)
+int StrStr(const char* text, const char* pattern)
 {
 	if (!*pattern) return 0;
 	int pos = 0;
@@ -29,14 +29,14 @@ int strst(const char* text, const char* pattern)
 int main() {
 	const char text[] = "baaaaaaababaaazbbbbabaazbaaazbaaz";
 	const char pattern[] = "baaz";
-	int r = strst(text, pattern);
+	int r = StrStr(text, pattern);
 	cout << r << endl;
 	return 0;
 }
 
 /* 
 ////Вариант 1
-int strlen(const char* s)
+int StrLen(const char* s)
 {
 	int count = 0;
 	while (*s) {
@@ -46,11 +46,11 @@ int strlen(const char* s)
 	return count;
 }
 
-int strst(const char* text, const char* pattern)
+int StrStr(const char* text, const char* pattern)
 {
 	if (*pattern == '\0') return 0;
-	int l_t = strlen(text);
-	int l_p = strlen(pattern);
+	int l_t = StrLen(text);
+	int l_p = StrLen(pattern);
 	int count = -1;
 	for (int i = 0; i < l_t; i++) {
 		int count_p = 0;
@@ -71,7 +71,7 @@ int strst(const char* text, const char* pattern)
 
 /*
 ////Вариант 2
-int strst(const char* text, const char* pattern)
+int StrStr(const char* text, const char* pattern)
 {
 	if (*pattern == '\0') return 0;
 	int pos = 0;
@@ -90,7 +90,7 @@ int strst(const char* text, const char* pattern)
 
 /*
 ////Вариант 3
-int strst(const char* text, const char* pattern)
+int StrStr(const char* text, const char* pattern)
 {
 	if (*pattern == '\0') return 0;
 	int count = -1;
