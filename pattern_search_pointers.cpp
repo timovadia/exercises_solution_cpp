@@ -27,9 +27,6 @@ int strst(const char* text, const char* pattern)
 	return -1;
 }
 
-
-
-
 int main() {
 	const char text[] = "baaaaaaababaaazbbbbabaazbaaazbaaz";
 	const char pattern[] = "baaz";
