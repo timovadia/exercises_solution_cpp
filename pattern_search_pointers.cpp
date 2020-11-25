@@ -13,16 +13,15 @@ using namespace std;
 
 int strst(const char* text, const char* pattern)
 {
-	if (*pattern == '\0') return 0;
+	if (!*pattern) return 0;
 	int pos = 0;
-	for (; *text != '\0'; text++) {
+	while (*text) {
 		auto t = text;
 		auto p = pattern;
-		while (*p && *t == *p) {
-			++p; ++t;
-		}
-		if (*p == '\0') return pos;
+		while (*p && *t == *p) { ++p; ++t; }
+		if (!*p) return pos;
 		++pos;
+		++text;
 	}
 	return -1;
 }
