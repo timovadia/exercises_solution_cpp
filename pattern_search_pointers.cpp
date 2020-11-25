@@ -68,20 +68,22 @@ int StrStr(const char* text, const char* pattern)
 }
 */
 
+
 /*
 ////Вариант 2
 int StrStr(const char* text, const char* pattern)
 {
 	if (*pattern == '\0') return 0;
-	int pos = 0;
+	int count = 0;
 	for (; *text != '\0'; text++) {
 		auto t = text;
 		auto p = pattern;
-		while (*p && *t == *p) {
-			++p; ++t;
+		for (; *p != '\0'; p++) {
+			if (*t == *p) ++t;
+			else break;
 		}
-		if (*p == '\0') return pos;
-		++pos;
+		if (*p == '\0') return count;
+		++count;
 	}
 	return -1;
 }
